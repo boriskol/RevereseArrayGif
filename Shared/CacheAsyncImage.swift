@@ -28,9 +28,11 @@ struct CacheAsyncImage<Content>: View where Content: View {
    }
    
    var body: some View {
+      let _ = print("ItemCache \(url.absoluteString)")
+      let _ = print("ItemCache \(ItemCache.shared.getItem(for: url))")
       if let cached = ItemCache.shared.getItem(for: url){
          //if let cached = ImageCache[url] {
-         let _ = print("ItemCache \(url.absoluteString)")
+         
          content(.success(cached))
       } else {
          let _ = print("request \(url.absoluteString)")
@@ -82,6 +84,7 @@ fileprivate class ItemCache: NSCache<NSString, StructWrapper<Image>> {
    static let shared = ItemCache()
    
    func cache(_ item: Image, for key: URL) {
+      let _ = print("cache \(key.absoluteString), image: \(item)")
       let itemWrapper = StructWrapper(item)
       self.setObject(itemWrapper, forKey: key.absoluteString as NSString )
    }
