@@ -29,7 +29,8 @@ struct CacheAsyncImage<Content>: View where Content: View {
    
    var body: some View {
       if let cached = ItemCache.shared.getItem(for: url){
-      //if let cached = ImageCache[url] {
+         //if let cached = ImageCache[url] {
+         let _ = print("ItemCache \(url.absoluteString)")
          content(.success(cached))
       } else {
          let _ = print("request \(url.absoluteString)")
@@ -55,37 +56,37 @@ struct CacheAsyncImage<Content>: View where Content: View {
 
 // TODO:  Fix this withNSCach
 /*
-fileprivate class ImageCache {
-   //static private var cache: [URL: Image] = [:]
-   
-   static subscript(url: URL) -> Image? {
-      get {
-         //ImageCache.cache[url]
-         return ItemCache.shared.getItem(for: url)
-      }
-      set {
-         //ImageCache.cache[url] = newValue
-         return ItemCache.shared.cache(newValue!, for: url)
-         
-      }
+ fileprivate class ImageCache {
+ //static private var cache: [URL: Image] = [:]
+ 
+ static subscript(url: URL) -> Image? {
+ get {
+ //ImageCache.cache[url]
+ return ItemCache.shared.getItem(for: url)
+ }
+ set {
+ //ImageCache.cache[url] = newValue
+ return ItemCache.shared.cache(newValue!, for: url)
+ 
+ }
+ }
+ }
+ */
+class StructWrapper<T>: NSObject {
+   let value: T
+   init(_ _struct: T) {
+      value = _struct
    }
 }
-*/
-class StructWrapper<T>: NSObject {
-    let value: T
-    init(_ _struct: T) {
-        value = _struct
-    }
-}
 fileprivate class ItemCache: NSCache<NSString, StructWrapper<Image>> {
-    static let shared = ItemCache()
-
-    func cache(_ item: Image, for key: URL) {
-        let itemWrapper = StructWrapper(item)
-       self.setObject(itemWrapper, forKey: key.absoluteString as NSString )
-    }
-    func getItem(for key: URL) -> Image? {
-       let itemWrapper = self.object(forKey: key.absoluteString as NSString)
-        return itemWrapper?.value
-    }
+   static let shared = ItemCache()
+   
+   func cache(_ item: Image, for key: URL) {
+      let itemWrapper = StructWrapper(item)
+      self.setObject(itemWrapper, forKey: key.absoluteString as NSString )
+   }
+   func getItem(for key: URL) -> Image? {
+      let itemWrapper = self.object(forKey: key.absoluteString as NSString)
+      return itemWrapper?.value
+   }
 }
